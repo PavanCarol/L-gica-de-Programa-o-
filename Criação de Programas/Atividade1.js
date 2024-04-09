@@ -1,24 +1,18 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
- 
-public class DisciplinasConcluidas {
-    public static void main(String[] args) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("arquivo.txt"));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                String ra = parts[0];
-                String disciplina = parts[1];
-                String status = parts[2];
-                if (status.equals("C")) {
-                    System.out.println("Aluno de RA " + ra + " concluiu a disciplina: " + disciplina);
-                }
-            }
-            reader.close();
-        } catch (IOException e) {
-            System.err.println("Erro ao ler o arquivo: " + e.getMessage());
-        }
+const fs = require("fs");
+
+fs.readFile("arquivo.txt", "utf8", (err, data) => {
+  if (err) {
+    console.error("Erro ao ler o arquivo:", err);
+    return;
+  }
+  const lines = data.trim().split("\n");
+  lines.forEach((line) => {
+    const parts = line.split(",");
+    const ra = parts[0];
+    const disciplina = parts[1];
+    const status = parts[2];
+    if (status === "C") {
+      console.log(`Aluno de RA ${ra} concluiu a disciplina: ${disciplina}`);
     }
-}
+  });
+});

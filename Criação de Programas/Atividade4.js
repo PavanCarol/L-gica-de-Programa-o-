@@ -1,28 +1,32 @@
-import java.util.Scanner;
- 
-public class BinaryDecimalConverter {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Escolha a operação: ");
-        System.out.println("1. Binário para Decimal");
-        System.out.println("2. Decimal para Binário");
-        int choice = scanner.nextInt();
-        switch (choice) {
-            case 1:
-                System.out.println("Digite um número binário: ");
-                String binary = scanner.next();
-                int decimal = Integer.parseInt(binary, 2);
-                System.out.println("Decimal: " + decimal);
-                break;
-            case 2:
-                System.out.println("Digite um número decimal: ");
-                int dec = scanner.nextInt();
-                String bin = Integer.toBinaryString(dec);
-                System.out.println("Binário: " + bin);
-                break;
-            default:
-                System.out.println("Escolha inválida!");
-        }
-        scanner.close();
-    }
-}
+const readline = require("readline");
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+console.log("Escolha a operação:");
+console.log("1. Binário para Decimal");
+console.log("2. Decimal para Binário");
+
+rl.question("Escolha: ", (choice) => {
+  switch (parseInt(choice)) {
+    case 1:
+      rl.question("Digite um número binário: ", (binary) => {
+        const decimal = parseInt(binary, 2);
+        console.log("Decimal:", decimal);
+        rl.close();
+      });
+      break;
+    case 2:
+      rl.question("Digite um número decimal: ", (dec) => {
+        const bin = parseInt(dec).toString(2);
+        console.log("Binário:", bin);
+        rl.close();
+      });
+      break;
+    default:
+      console.log("Escolha inválida!");
+      rl.close();
+  }
+});

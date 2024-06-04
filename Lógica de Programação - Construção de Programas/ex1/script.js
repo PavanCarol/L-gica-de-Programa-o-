@@ -1,76 +1,82 @@
-var game = 0;
-var valores = [];
-var two = false;
 window.addEventListener("load", () => {
-    const body = document.getElementsByTagName("body")[0]
-    for (let i = 0; i < 14; i++) {
+  let game = 0;
+  const valores = [];
+  const body = document.body;
+  const selectedNumbersDiv = document.getElementById("selected-numbers");
+  let doubleSelections = 0;
 
-        var newDiv = document.createElement("div")
-        newDiv.classList = `game ${i}`
-        for (let j = 0; j < 3; j++) {
-            var input = document.createElement("input")
-            input.type = "checkbox"
-            input.classList = `check${i}`
-            newDiv.appendChild(input)
-        }
-
-        if (i == 0) newDiv.style.display = "block"
-        else newDiv.style.display = "none"
-        body.appendChild(newDiv)
+  for (let j = 0; j < 15; j++) {
+    const newDiv = document.createElement("div");
+    newDiv.classList.add("game");
+    for (let i = 0; i < 3; i++) {
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.classList.add(`check${j}`);
+      newDiv.appendChild(input);
     }
-    var btn = document.createElement("button")
-    btn.textContent = "Próximo jogo"
+    if (j === 0) newDiv.style.display = "flex";
+    else newDiv.style.display = "none";
+    body.appendChild(newDiv);
+  }
 
-    btn.addEventListener("click", () => {
-        let val = []
-        var checks = document.getElementsByClassName(`check${game}`)
-        if (!checks[0].checked && !checks[1].checked && !checks[2].checked) {
-            alert("Selecione ao menos 1")
-            return
-        }
-        if (checks[0].checked && checks[1].checked && checks[2].checked) {
-            alert("Você perdeu!")
-            location.reload()
-            return
-        }
-        for (let j = 0; j < checks.length; j++) {
-            const element = checks[j];
-            val.push(element.checked)
-        }
-        var one = 0;
-        val.forEach(element => {
-            if (element) {
-                one = one + 1
-            }
-        });
-        if (one == 2) {
-            if (two) {
-                alert("Você perdeu!!!");
-                location.reload()
-            }
-            two = true
-        }
-        if(!two && game == 2){
-            alert("Você perdeu")
-            location.reload()
-            return
-        }
-        if(game == 13){
-            alert("Você ganhou!!!")
-            location.reload()
-        }
-        valores.push(val)
+  const btn = document.createElement("button");
+  btn.textContent = "Próximo jogo";
+  btn.addEventListener("click", () => {
+    const checks = document.getElementsByClassName(`check${game}`);
+    let selectedCount = 0;
+    let selectedIndices = [];
+    for (let i = 0; i < checks.length; i++) {
+      if (checks[i].checked) {
+        selectedCount++;
+        selectedIndices.push(i + 1); // Save the index of the selected checkbox (1-based index)
+      }
+    }
 
-        game = game + 1;
+    if (selectedCount === 0) {
+      alert("Selecione ao menos 1");
+      return;
+    }
 
-        const inputsTotal = document.getElementsByTagName("div")
-        for (let i = 0; i < inputsTotal.length; i++) {
-            const element = inputsTotal[i];
-            element.style.display = "none"
-            if(i == game) element.style.display = "block"
-        }
+    if (selectedCount === 2) {
+      if (doubleSelections >= 1) {
+        alert("Você só pode selecionar 1 jogo duplo.");
+        return; // Do not proceed to the next game
+      } else {
+        doubleSelections++;
+      }
+    }
 
-    })
+    if (selectedCount > 2) {
+      alert("Selecione no máximo 2 opções. Você perdeu!!!");
+      location.reload();
+      return;
+    }
 
-    body.appendChild(btn)
-})
+    valores.push(selectedIndices.join(selectedCount === 2 ? "" : ", "));
+
+    // Update the selected numbers div
+    selectedNumbersDiv.textContent = `Números selecionados: ${valores.join(
+      ", "
+    )}`;
+
+    if (game === 14) {
+      if (doubleSelections < 1) {
+        alert("Você precisa selecionar ao menos 1 jogo duplo. Você perdeu!!!");
+        location.reload();
+        return;
+      }
+      alert("Você completou todos os jogos! Você ganhou!!!");
+      location.reload();
+      return;
+    }
+
+    game++;
+    const games = document.getElementsByClassName("game");
+    for (let i = 0; i < games.length; i++) {
+      games[i].style.display = "none";
+    }
+    games[game].style.display = "flex";
+  });
+
+  body.appendChild(btn);
+});
